@@ -54,7 +54,7 @@
       },
       deleteComponent(index) {
         console.log('in deleteComponent ' + this.desks[index])
-        fetch(`http://localhost:8081/users/1/desks/delete/${this.desks[index].id}`)
+        fetch(`http://localhost:8081/desks/delete/${this.desks[index].id}`)
             .then(response => { if (response.ok) this.desks.splice(index, 1)})
       },
       clickOnDesk(index) {

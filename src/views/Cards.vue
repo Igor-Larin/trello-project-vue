@@ -26,7 +26,7 @@
     methods: {
       postComponent(card) {
         console.log('in postComponent')
-        fetch(`http://localhost:8081/users/1/desks/${this.deskId}/newCard`,
+        fetch(`http://localhost:8081/desks/${this.deskId}/newCard`,
             {
               method: 'POST',
               headers: {
@@ -42,7 +42,7 @@
       },
       deleteComponent(index) {
         console.log('in deleteComponent ')
-        fetch(`http://localhost:8081/users/1/desks/${this.deskId}/cards/delete/${this.cards[index].id}`)
+        fetch(`http://localhost:8081/cards/delete/${this.cards[index].id}`)
             .then(response => { if (response.ok) this.cards.splice(index, 1)})
       },
       click(index) {
@@ -51,7 +51,7 @@
       },
       changeElem(changedElem, index) {
         console.log('in cards ' + index + ' ' + changedElem.id + ' ' + changedElem.name + ' ' + changedElem.descr)
-        fetch(`http://localhost:8081/users/1/desks/${this.deskId}/cards/update`,
+        fetch(`http://localhost:8081/desks/${this.deskId}/cards/update`,
             {
               method: 'POST',
               headers: {
@@ -64,7 +64,7 @@
     },
     mounted() {
       console.log('in mounted')
-      fetch(`http://localhost:8081/users/1/desks/${this.deskId}/cards`)
+      fetch(`http://localhost:8081/desks/${this.deskId}/cards`)
           .then(response => response.json())
           .then(res => this.cards = res)
     }

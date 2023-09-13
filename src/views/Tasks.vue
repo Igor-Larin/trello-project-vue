@@ -2,7 +2,7 @@
   <div class="tasksWrapper">
     <div class="taskContainer" v-if="tasks.length !== 0">
       <h3>Список задач карточки </h3>
-      <Task v-on:save-changed-task="saveTask" v-on:delete-task="deleteTask" v-for="(task, index) in tasks" :task="task" :index="index"/>
+      <Task v-on:task-complete="changeTaskComplete" v-on:save-changed-task="saveTask" v-on:delete-task="deleteTask" v-for="(task, index) in tasks" :task="task" :index="index"/>
     </div>
     <h1 v-else>Список задач пуст!</h1>
     <AddTask v-on:add-task="addTask"/>
@@ -13,6 +13,7 @@
 <script>
 
 import {defineComponent} from "vue";
+import TasksList from "@/components/TasksList.vue";
 import AddTask from "@/components/AddTask.vue";
 import BackToButton from "@/components/BackToButton.vue";
 import Task from "@/components/Task.vue";
@@ -31,7 +32,7 @@ export default defineComponent({
   methods: {
     addTask(task) {
       task.cardId = this.cardId
-      fetch(`http://localhost:8081/users/1/cards/${this.cardId}/newTask`,
+      fetch(`http://localhost:8081/cards/${this.cardId}/newTask`,
           {
             method: 'POST',
             headers: {
@@ -47,11 +48,11 @@ export default defineComponent({
     },
     deleteTask(index) {
       console.log(`delete task ${index}`)
-      fetch(`http://localhost:8081/users/1/desks/${this.deskId}/cards/${this.cardId}/tasks/delete/${this.tasks[index].id}`)
+      fetch(`http://localhost:8081/tasks/delete/${this.tasks[index].id}`)
           .then(response => { if (response.ok) this.tasks.splice(index, 1)})
     },
     saveTask(changedTask, index) {
-      fetch(`http://localhost:8081/users/1/desks/${this.deskId}/cards/${this.cardId}/tasks/update`,
+      fetch(`http://localhost:8081/cards/${this.cardId}/tasks/update`,
           {
             method: 'POST',
             headers: {
@@ -61,10 +62,22 @@ export default defineComponent({
           })
           .then(response => { if (response.ok) this.tasks[index] = changedTask })
     },
+    changeTaskComplete(index) {
+      console.log(`change state ${index}`)
+      this.tasks[index].complete = !this.tasks[index].complete
+      fetch('http://localhost:8081/complete',
+          {
+            method: 'POST',
+            headers: {
+              'Content-type':'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(this.tasks[index].id)
+          })
+    },
   },
   mounted() {
     console.log('in mounted tasks')
-    fetch(`http://localhost:8081/users/1/desks/${this.deskId}/cards/${this.cardId}/tasks`)
+    fetch(`http://localhost:8081/cards/${this.cardId}/tasks`)
         .then(response => response.json())
         .then(res => this.tasks = res)
   }
