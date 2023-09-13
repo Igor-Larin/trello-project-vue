@@ -1,24 +1,41 @@
 <template>
-  <div class="inside">
+  <TaskChangeForm  v-on:save-button-clicked="saveButtonClick" v-if="isChanging" :is-desk-or-card="false" :elem="task"/>
+  <div class="inside" v-else>
     <div class="task">
       {{ task.text }}
     </div>
-    <button class="changeButton">
+    <button v-on:click="changeButtonClick" class="changeButton">
       ред.
     </button>
-    <button v-on:click="deleteButton" class="deleteButton">
+    <button v-on:click="deleteButtonClick" class="deleteButton">
       del.
     </button>
   </div>
 </template>
 
 <script>
+  import TaskChangeForm from "@/components/TaskChangeForm.vue";
+
   export default {
+    components: {TaskChangeForm},
     props: ['task', 'index'],
+    data() {
+      return {
+        isChanging: false,
+      }
+    },
     methods: {
-      deleteButton() {
+      deleteButtonClick() {
         console.log('delete task in task')
         this.$emit('delete-task', this.index)
+      },
+      changeButtonClick() {
+        this.isChanging = true
+        console.log('ischanging ' + this.isChanging)
+      },
+      saveButtonClick(changedTask) {
+        this.isChanging = false
+        this.$emit('save-changed-task', changedTask, this.index)
       }
     }
   }

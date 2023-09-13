@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import DeskOrCardForm from "@/components/DeskOrCardForm.vue";
+import DeskOrCardForm from "@/components/DeskOrCardChangeForm.vue";
 
 export default {
   components: {DeskOrCardForm},
@@ -50,7 +50,6 @@ export default {
 }
 </script>
 
-
 <style>
 .card {
   display: flex;
@@ -75,7 +74,6 @@ export default {
 button {
   padding: 5px;
 }
-
 .text {
   margin: 2px auto 12px;
   font-size: 18px;
@@ -87,7 +85,6 @@ button {
   padding: 6px;
 
 }
-
 .smallTitle {
   font-size: 13px;
   margin: 2px auto 2px;

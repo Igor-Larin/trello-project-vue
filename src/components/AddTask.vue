@@ -15,6 +15,7 @@ export default {
   methods: {
     addTaskHandler() {
       let task = {
+        id: null,
         text: this.inputTaskText,
         isComplete: false,
         cardId: 1,
