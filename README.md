@@ -1,19 +1,23 @@
-# test2
+# trello-project
+Проект для практического изучения Spring и Vue. Основная идея - реализовать функциональность сайта [Trello](https://trello.com/ru), в основе которого лежит метод управления проектами канбан.
 
-## Project setup
-```
-npm install
-```
+## Описание
+Данный репозиторий представляет собой клиентскую часть проекта. Также вы можете ознакомиться с [серверной частью](https://github.com/Igor-Larin/trello-project/tree/master).
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Используемые технологии
+Клиентская часть реализована как одностраничное приложение с помощью Vue.js.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## Реализованные возможности
+- Просмотр  
+  ![](https://media.giphy.com/media/I9LZrwn4i6Kra9lrbQ/giphy.gif)
+- Добавление  
+  ![](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXFqamRvdGUybGxvNmIxeHN4YnZ6M3huaWdoN3oxNXd6cTVsbGdlOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/saPMwEgqc6ldwBLzR6/giphy.gif)
+- Изменение и удаление  
+![](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW9sdGd3MHVqdmpnc3BrYndla2pvZ2ZoampqMjc3dWtpNzVjbzN1ciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/itX9alFcTsApUOYNbg/giphy.gif)
+- Сортировка и фильтрация задач  
+  ![](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdDMxY3ZqYnZ2YWpiMDZscHFyMGFsNDB3emt6OHQ0ejM2b2I4bTAwNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rJN2NDaqw4ETTFmcmi/giphy.gif)
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Что нужно сделать
+1. Регистрация, вход, личный кабинет;
+2. Добавить возможность добавлять теги к доскам/карточкам;
+3. Добавить колонки для задач.
