@@ -1,27 +1,14 @@
 <template>
-  <div class="tasksWrapper">
-    <div class="taskContainer" v-if="tasks.length !== 0">
-      <h3>Список задач карточки </h3>
-      <div class="optionsContainer">
-        <select v-model="filterFlag">
-          <option selected disabled hidden="hidden" value="none">Фильтр</option>
-          <option v-for="option in filterOptions" :value="option.value">
-            {{ option.text }}
-          </option>
-        </select>
-        <select v-model="sortFlag">
-          <option selected disabled hidden="hidden" value="none">Сортировка</option>
-          <option v-for="option in sortOptions" :value="option.value">
-            {{ option.text }}
-          </option>
-        </select>
+  <main>
+      <div class="taskContainer" v-if="tasks.length !== 0">
+        <h3>Список задач карточки </h3>
+        <TasksFilters v-on:sort-changed="changeSortFlag" v-on:filter-changed="changeFilterFlag" :filter-flag="filterFlag" :sort-flag="sortFlag"/>
+        <Task v-on:task-complete="changeTaskComplete" v-on:save-changed-task="saveTask" v-on:delete-task="deleteTask" v-for="(task, index) in getTasks" :task="task" :index="index"/>
       </div>
-      <Task v-on:task-complete="changeTaskComplete" v-on:save-changed-task="saveTask" v-on:delete-task="deleteTask" v-for="(task, index) in getTasks" :task="task" :index="index"/>
-    </div>
-    <h1 v-else>Список задач пуст!</h1>
-    <AddTask v-on:add-task="addTask"/>
-    <BackToButton :is-to-desk="false" :id="deskId"/>
-  </div>
+      <h1 v-else>Список задач пуст!</h1>
+      <AddTask v-on:add-task="addTask"/>
+      <BackToButton :is-to-desk="false" :id="deskId"/>
+  </main>
 </template>
 
 <script>
@@ -30,9 +17,10 @@ import {defineComponent} from "vue";
 import AddTask from "@/components/AddTask.vue";
 import BackToButton from "@/components/BackToButton.vue";
 import Task from "@/components/Task.vue";
+import TasksFilters from "@/components/TasksFilters.vue";
 
 export default defineComponent({
-  components: {BackToButton, AddTask, Task },
+  components: {BackToButton, AddTask, Task, TasksFilters},
   props: [
     'deskId',
     'cardId'
@@ -40,17 +28,8 @@ export default defineComponent({
   data() {
     return {
       tasks: [],
-      sortFlag: 'none',
-      filterFlag: 'none',
-      sortOptions: [
-          {text: 'Новые', value: 'new'},
-          {text: 'Старые', value: 'old'},
-      ],
-      filterOptions: [
-        {text: 'Выполненные', value: 'completed'},
-        {text: 'Невыполненные', value: 'incompleted'},
-        {text: 'Все', value: 'all'},
-      ],
+      sortFlag: '',
+      filterFlag: '',
     }
   },
   methods: {
@@ -98,6 +77,12 @@ export default defineComponent({
             body: JSON.stringify(this.tasks[index].id)
           })
     },
+    changeFilterFlag(flag) {
+      this.filterFlag = flag
+    },
+    changeSortFlag(flag) {
+      this.sortFlag = flag
+    }
   },
   computed: {
     getTasks() {
@@ -127,13 +112,6 @@ export default defineComponent({
 h1 {
   text-align: center;
 }
-.optionsContainer {
-  display: flex;
-}
-.tasksWrapper {
-  display: flex;
-  flex-direction: column;
-}
 .taskContainer {
   display: flex;
   flex-direction: column;
@@ -145,4 +123,5 @@ h1 {
   border-radius: 5px;
   width: 35%;
 }
+
 </style>

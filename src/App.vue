@@ -35,15 +35,21 @@ export default {
 }
 </script>
 
+<style scoped>
+  footer {
+
+  }
+</style>
+
 <style>
 #app {
-  min-height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 body {
   margin: 0;
-  height: 100%;
+  min-height: 100vh;
   background-color: white;
 }
 header {
@@ -83,16 +89,9 @@ header {
   margin: 5px 20px;
 }
 main {
-  flex: 1 1 auto;
-}
-footer {
-  background-color: #B2BC4E;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  flex-grow: 1;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
 }
 button, a {
   text-align: center;
@@ -104,6 +103,12 @@ button, a {
 }
 button:hover {
   cursor: pointer;
+}
+footer {
+  background-color: #B2BC4E;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 footer a {
   color: black;

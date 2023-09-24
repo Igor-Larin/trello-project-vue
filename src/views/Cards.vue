@@ -1,7 +1,9 @@
 <template>
-  <DeskOrCardList v-on:change-elem="changeElem" v-on:click-on-elem="click" v-on:delete-elem="deleteComponent" :elems="cards" :add-button-text="addButtonText"/>
-  <AddComponent v-on:component-added="postComponent" :add-button-text="addButtonText"/>
-  <BackToButton :is-to-desk="true"/>
+  <main>
+    <DeskOrCardList v-on:change-elem="changeElem" v-on:click-on-elem="click" v-on:delete-elem="deleteComponent" :elems="cards" :add-button-text="addButtonText"/>
+    <AddComponent v-on:component-added="postComponent" :add-button-text="addButtonText"/>
+    <BackToButton :is-to-desk="true"/>
+  </main>
 </template>
 
 <script>
