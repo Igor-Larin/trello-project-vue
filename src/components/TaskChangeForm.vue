@@ -19,6 +19,7 @@ export default {
         id: this.elem.id,
         text: this.textInput,
         complete: this.elem.complete,
+        timestamp: this.elem.timestamp,
       }
       console.log(changedElem)
       this.$emit('save-button-clicked', changedElem)

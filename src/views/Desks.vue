@@ -20,7 +20,7 @@
         isFetched: false,
       }
     },
-    mounted() {
+    created() {
       console.log('in mounted')
       fetch("http://localhost:8081/users/1/desks")
           .then(response => {

@@ -19,6 +19,7 @@ export default {
         text: this.inputTaskText,
         isComplete: false,
         cardId: 1,
+        timestamp: new Date(Date.now()),
       }
       this.$emit('add-task', task)
       this.inputTaskText = ''

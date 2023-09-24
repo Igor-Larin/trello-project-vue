@@ -2,7 +2,21 @@
   <div class="tasksWrapper">
     <div class="taskContainer" v-if="tasks.length !== 0">
       <h3>Список задач карточки </h3>
-      <Task v-on:task-complete="changeTaskComplete" v-on:save-changed-task="saveTask" v-on:delete-task="deleteTask" v-for="(task, index) in tasks" :task="task" :index="index"/>
+      <div class="optionsContainer">
+        <select v-model="filterFlag">
+          <option selected disabled hidden="hidden" value="none">Фильтр</option>
+          <option v-for="option in filterOptions" :value="option.value">
+            {{ option.text }}
+          </option>
+        </select>
+        <select v-model="sortFlag">
+          <option selected disabled hidden="hidden" value="none">Сортировка</option>
+          <option v-for="option in sortOptions" :value="option.value">
+            {{ option.text }}
+          </option>
+        </select>
+      </div>
+      <Task v-on:task-complete="changeTaskComplete" v-on:save-changed-task="saveTask" v-on:delete-task="deleteTask" v-for="(task, index) in getTasks" :task="task" :index="index"/>
     </div>
     <h1 v-else>Список задач пуст!</h1>
     <AddTask v-on:add-task="addTask"/>
@@ -13,7 +27,6 @@
 <script>
 
 import {defineComponent} from "vue";
-import TasksList from "@/components/TasksList.vue";
 import AddTask from "@/components/AddTask.vue";
 import BackToButton from "@/components/BackToButton.vue";
 import Task from "@/components/Task.vue";
@@ -27,6 +40,17 @@ export default defineComponent({
   data() {
     return {
       tasks: [],
+      sortFlag: 'none',
+      filterFlag: 'none',
+      sortOptions: [
+          {text: 'Новые', value: 'new'},
+          {text: 'Старые', value: 'old'},
+      ],
+      filterOptions: [
+        {text: 'Выполненные', value: 'completed'},
+        {text: 'Невыполненные', value: 'incompleted'},
+        {text: 'Все', value: 'all'},
+      ],
     }
   },
   methods: {
@@ -75,7 +99,22 @@ export default defineComponent({
           })
     },
   },
-  mounted() {
+  computed: {
+    getTasks() {
+      let newTasks = this.tasks
+      if(this.sortFlag === 'new')
+        newTasks = this.tasks.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+      else if(this.sortFlag === 'old')
+        newTasks = this.tasks.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+      if(this.filterFlag === 'completed')
+        return newTasks.filter(t => t.complete)
+      else if(this.filterFlag === 'incompleted')
+        return newTasks.filter(t => !t.complete)
+      else
+        return newTasks
+    }
+  },
+  created() {
     console.log('in mounted tasks')
     fetch(`http://localhost:8081/cards/${this.cardId}/tasks`)
         .then(response => response.json())
@@ -87,6 +126,9 @@ export default defineComponent({
 <style scoped>
 h1 {
   text-align: center;
+}
+.optionsContainer {
+  display: flex;
 }
 .tasksWrapper {
   display: flex;

@@ -62,7 +62,7 @@
             .then(response => { if (response.ok) this.cards[index] = changedElem })
       }
     },
-    mounted() {
+    created() {
       console.log('in mounted')
       fetch(`http://localhost:8081/desks/${this.deskId}/cards`)
           .then(response => response.json())
