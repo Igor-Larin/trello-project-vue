@@ -23,6 +23,7 @@
       return {
         cards: [],
         addButtonText: 'Добавить карточку',
+        authHeader: 'Bearer ',
       }
     },
     methods: {
@@ -32,7 +33,8 @@
             {
               method: 'POST',
               headers: {
-                'Content-type':'application/json;charset=utf-8'
+                'Content-type':'application/json;charset=utf-8',
+                Authorization: this.authHeader
               },
               body: JSON.stringify(card)
             })
@@ -44,12 +46,16 @@
       },
       deleteComponent(index) {
         console.log('in deleteComponent ')
-        fetch(`http://localhost:8081/cards/delete/${this.cards[index].id}`)
+        fetch(`http://localhost:8081/cards/delete/${this.cards[index].id}`, {
+          headers: {
+            Authorization: this.authHeader
+          }
+        })
             .then(response => { if (response.ok) this.cards.splice(index, 1)})
       },
       click(index) {
         console.log(this.deskId)
-        this.$router.push(`/users/1/desks/${this.deskId}/cards/${this.cards[index].id}/tasks`)
+        this.$router.push(`/desks/${this.deskId}/cards/${this.cards[index].id}/tasks`)
       },
       changeElem(changedElem, index) {
         console.log('in cards ' + index + ' ' + changedElem.id + ' ' + changedElem.name + ' ' + changedElem.descr)
@@ -57,7 +63,8 @@
             {
               method: 'POST',
               headers: {
-                'Content-type':'application/json;charset=utf-8'
+                'Content-type':'application/json;charset=utf-8',
+                Authorization: this.authHeader
               },
               body: JSON.stringify(changedElem)
             })
@@ -66,9 +73,22 @@
     },
     created() {
       console.log('in mounted')
-      fetch(`http://localhost:8081/desks/${this.deskId}/cards`)
-          .then(response => response.json())
-          .then(res => this.cards = res)
+      if(localStorage.token) {
+        this.authHeader = this.authHeader + localStorage.token
+        fetch(`http://localhost:8081/desks/${this.deskId}/cards`, {
+          headers: {
+            Authorization: this.authHeader
+          }
+        })
+            .then(response => response.json())
+            .then(res => this.cards = res)
+            .catch(error => {
+              console.log(error)
+            })
+      }
+      else {
+        this.$router.push('/login')
+      }
     }
   }
 </script>

@@ -30,6 +30,7 @@ export default defineComponent({
       tasks: [],
       sortFlag: '',
       filterFlag: '',
+      authHeader: 'Bearer ',
     }
   },
   methods: {
@@ -39,7 +40,8 @@ export default defineComponent({
           {
             method: 'POST',
             headers: {
-              'Content-type':'application/json;charset=utf-8'
+              'Content-type':'application/json;charset=utf-8',
+              Authorization: this.authHeader
             },
             body: JSON.stringify(task)
           })
@@ -51,7 +53,11 @@ export default defineComponent({
     },
     deleteTask(index) {
       console.log(`delete task ${index}`)
-      fetch(`http://localhost:8081/tasks/delete/${this.tasks[index].id}`)
+      fetch(`http://localhost:8081/tasks/delete/${this.tasks[index].id}`, {
+        headers: {
+          Authorization: this.authHeader
+        }
+      })
           .then(response => { if (response.ok) this.tasks.splice(index, 1)})
     },
     saveTask(changedTask, index) {
@@ -59,7 +65,8 @@ export default defineComponent({
           {
             method: 'POST',
             headers: {
-              'Content-type':'application/json;charset=utf-8'
+              'Content-type':'application/json;charset=utf-8',
+              Authorization: this.authHeader
             },
             body: JSON.stringify(changedTask)
           })
@@ -72,7 +79,8 @@ export default defineComponent({
           {
             method: 'POST',
             headers: {
-              'Content-type':'application/json;charset=utf-8'
+              'Content-type':'application/json;charset=utf-8',
+              Authorization: this.authHeader
             },
             body: JSON.stringify(this.tasks[index].id)
           })
@@ -101,9 +109,22 @@ export default defineComponent({
   },
   created() {
     console.log('in mounted tasks')
-    fetch(`http://localhost:8081/cards/${this.cardId}/tasks`)
-        .then(response => response.json())
-        .then(res => this.tasks = res)
+    if(localStorage.token) {
+      this.authHeader += localStorage.token
+      fetch(`http://localhost:8081/cards/${this.cardId}/tasks`, {
+        headers: {
+          Authorization: this.authHeader
+        }
+      })
+          .then(response => response.json())
+          .then(res => this.tasks = res)
+          .catch(error => {
+            console.log(error)
+          })
+    }
+    else {
+      this.$router.push('/login')
+    }
   }
 })
 </script>

@@ -18,30 +18,49 @@
         desks: [],
         addButtonText: 'Добавить доску',
         isFetched: false,
+        authHeader: 'Bearer '
       }
     },
     created() {
-      console.log('in mounted')
-      fetch("http://localhost:8081/users/1/desks")
-          .then(response => {
-            if (response.ok) {
-              this.isFetched = true
-              return response.json()
-            }
-          })
-          .then(res => {
-            if(this.isFetched)
-              this.desks = res
-          })
+      console.log('in mounted desks')
+      if(localStorage.token) {
+        this.authHeader = this.authHeader + localStorage.token
+        console.log(localStorage.token)
+        fetch(`http://localhost:8081/users/${localStorage.username}/desks`, {
+          headers: {
+            Authorization: this.authHeader
+          }
+        })
+            .then(response => {
+              if (response.ok) {
+                this.isFetched = true
+                return response.json()
+              }
+              else if(response.status === 401)
+                this.$router.push('/login')
+            })
+            .then(res => {
+              if(this.isFetched)
+                this.desks = res
+            })
+            .catch(error => {
+              console.log(error)
+            })
+      }
+      else {
+        console.log('in desks redirect or login')
+        this.$router.push('/login')
+      }
     },
     methods: {
       postComponent(comp) {
         console.log('in postComponent')
-        fetch("http://localhost:8081/users/1/newDesk",
+        fetch(`http://localhost:8081/users/${localStorage.username}/newDesk`,
             {
               method: 'POST',
               headers: {
-                'Content-type':'application/json;charset=utf-8'
+                'Content-type': 'application/json;charset=utf-8',
+                Authorization: this.authHeader,
               },
               body: JSON.stringify(comp)
             })
@@ -54,20 +73,25 @@
       },
       deleteComponent(index) {
         console.log('in deleteComponent ' + this.desks[index])
-        fetch(`http://localhost:8081/desks/delete/${this.desks[index].id}`)
+        fetch(`http://localhost:8081/desks/delete/${this.desks[index].id}`, {
+          headers: {
+            Authorization: this.authHeader
+          }
+        })
             .then(response => { if (response.ok) this.desks.splice(index, 1)})
       },
       clickOnDesk(index) {
         console.log('click on desk')
-        this.$router.push(`/users/1/desks/${this.desks[index].id}/cards`)
+        this.$router.push(`/desks/${this.desks[index].id}/cards`)
       },
       changeElem(changedElem, index) {
         console.log('in desks ' + index + ' ' + changedElem.id + ' ' + changedElem.name + ' ' + changedElem.descr)
-        fetch("http://localhost:8081/users/1/desks/update",
+        fetch(`http://localhost:8081/users/${localStorage.username}/desks/update`,
             {
               method: 'POST',
               headers: {
-                'Content-type':'application/json;charset=utf-8'
+                'Content-type': 'application/json;charset=utf-8',
+                Authorization: this.authHeader
               },
               body: JSON.stringify(changedElem)
             })

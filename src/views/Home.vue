@@ -1,38 +1,44 @@
 <template>
   <main>
-    <div id="descr">
-      <p>
-        Это не просто работа. Это координация действий в команде.
-      </p>
-      <p>
-        Начните с досок, колонок и карточек, а затем переходите к более сложным функциям. Управляйте проектами, упорядочивайте задачи и поддерживайте командный дух — все это в Trello.
-      </p>
-    </div>
-    <div id="img">
-      <img src="https://i.postimg.cc/mr7G7WkS/example.png">
-    </div>
-    <div id="reg" class="lbrown">
-      <p>
-        Начните планировать свои групповые проекты прямо сейчас
-      </p>
-      <form>
+    <div class="mainContainer">
+      <div id="descr">
         <p>
-          Пройдите регистрацию:
+          Это не просто работа. Это координация действий в команде.
         </p>
-        <div id="inp">
-          <input id="mail" placeholder="Электронная почта">
-          <router-link to="/registration" id="regButton" type="submit" class="green">
-            Зарегистрироваться
-          </router-link>
-        </div>
-      </form>
+        <p>
+          Начните с досок, колонок и карточек, а затем переходите к более сложным функциям. Управляйте проектами, упорядочивайте задачи и поддерживайте командный дух — все это в Trello.
+        </p>
+      </div>
+      <div id="img">
+        <img src="https://i.postimg.cc/mr7G7WkS/example.png">
+      </div>
+      <div id="reg" class="lbrown">
+        <p>
+          Начните планировать свои групповые проекты прямо сейчас
+        </p>
+        <form>
+          <p>
+            Пройдите регистрацию:
+          </p>
+          <div id="inp">
+            <input id="mail" placeholder="Имя пользователя">
+            <router-link to="/registration/" id="regButton" type="submit" class="green">
+              Зарегистрироваться
+            </router-link>
+          </div>
+        </form>
+      </div>
     </div>
   </main>
 </template>
 
 <script>
   export default {
-
+    data() {
+      return {
+        username: ''
+      }
+    }
   }
 </script>
 
@@ -46,10 +52,19 @@
   font-size: 24px;
 }
 main {
-  width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: 0 auto 100px;
   padding-top: 50px;
   background: linear-gradient(to bottom, #a4fffa, #ffffff);
+}
+.mainContainer {
+  width: 30%;
+}
+img {
+  width: 100%;
 }
 #reg {
   border-radius: 10px;
@@ -59,7 +74,9 @@ main {
   text-align: left;
   font-size: 18px;
 }
-
+a {
+  text-decoration: none;
+}
 #reg p {
   color: white;
 }
@@ -80,7 +97,6 @@ main {
   border-radius: 10px;
   padding: 5px;
   color: white;
-  width: 45%;
   text-align: center;
 }
 

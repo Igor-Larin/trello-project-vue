@@ -1,26 +1,75 @@
 <template>
   <main>
-    <form>
-      <p>
+    <div class="formContainer">
+      <h3>
         Регистрация нового пользователя
-      </p>
-      <input class="regForm" placeholder="Электронная почта">
-      <input class="regForm" placeholder="Пароль">
-      <button class = "regForm gray" id="regButton" type="submit">
+      </h3>
+      <input v-model="userName" class="regForm" placeholder="Имя пользователя">
+      <input v-model="userPassword" class="regForm" placeholder="Пароль">
+      <button v-on:click="regButtonClick" class = "regForm gray" id="regButton" type="submit">
         Зарегистрироваться
       </button>
       <div id="login">
         <p id="haveAcc">
           Уже есть аккаунт?
         </p>
-        <router-link to="/users/1/desks" id="loginButton" class="gray">Войти</router-link>
+        <router-link to="/login" id="loginButton" class="gray">Войти</router-link>
       </div>
-    </form>
+      <transition @after-enter="isError = !isError" name="alert">
+        <div v-if="isError" class="alertBlock">
+          {{ errorText }}
+        </div>
+      </transition>
+    </div>
   </main>
 </template>
 
 <script>
-
+export default {
+  data() {
+    return {
+      userPassword: '',
+      userName: '',
+      isError: false,
+      errorText: '',
+    }
+  },
+  methods: {
+    regButtonClick() {
+      if(this.userName.trim() !== '' && this.userPassword.trim() !== '') {
+        let user = {
+          password: this.userPassword,
+          username: this.userName
+        }
+        fetch('http://localhost:8081/registration', {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json;charset=utf-8'
+          },
+          body: JSON.stringify(user)
+        })
+            .then(response => {
+              if (response.ok) {
+                this.userName = ''
+                this.userPassword = ''
+                this.$router.push('/login')
+              } else if (response.status === 400) {
+                console.log('registration bad request')
+                this.errorText = 'Пользователь с таким именем уже есть!'
+                this.isError = true
+              }
+            })
+            .catch(error => {
+              console.log(error)
+            })
+      }
+      else {
+        this.errorText = 'Некорректные входные данные'
+        this.isError = true
+      }
+    },
+  }
+}
 </script>
 
 <style scoped>
@@ -28,29 +77,49 @@ main {
   height: 90%;
   display: flex;
   align-items: center;
-  width: 300px;
+  width: 100%;
   margin: 0 auto;
+  background: linear-gradient(to bottom, #a4fffa, #ffffff);
+}
+.alert-enter-active{
+  transition: opacity 0.75s linear;
+}
+.alert-leave-active {
+  transition: opacity 2.5s ease-in
+}
+
+.alert-enter-from,
+.alert-leave-to{
+  opacity: 0;
+}
+.alertBlock {
+  background: #979797;
+  color: white;
+  padding: 7px;
+  text-align: center;
+  border-radius: 6px;
+  margin-top: 30px;
 }
 .gray {
   background-color: #979797;
 }
-form {
-  width: 100%;
+.formContainer {
   display: flex;
-  align-items: center;
+  width: 15%;
   flex-direction: column;
-  background-color: white;
-  text-align: center;
-  border-radius: 5px;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-  padding: 12px 20px;
+  justify-content: space-around;
+  align-items: center;
+}
+#login {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 #regButton {
   color: white;
   border: none;
   margin-bottom: 20px;
 }
-
 #regButton:hover {
   background-color: #C3C3C3;
 }
@@ -69,11 +138,9 @@ form {
   color: white;
   font-size: 14px;
 }
-
 #loginButton:hover {
   background-color: #C3C3C3;
 }
-
 #haveAcc {
   font-size: 11px;
   color: #9B9B9B;

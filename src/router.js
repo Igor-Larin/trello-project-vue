@@ -4,13 +4,16 @@ import Registration from "@/views/Registration.vue"
 import Cards from "@/views/Cards.vue";
 import Desks from "@/views/Desks.vue";
 import Tasks from "@/views/Tasks.vue";
+import Login from "@/views/Login.vue"
 
 const routes = [
     {path: '/', component: Home},
-    {path: '/users/1/desks', component: Desks},
-    {path: '/users/1/desks/:deskId/cards', component: Cards, props: true},
+    {path: '/desks', component: Desks},
+    {path: '/desks/:deskId/cards', component: Cards, props: true},
+    {path: '/registration/:username', component: Registration},
     {path: '/registration', component: Registration},
-    {path: '/users/1/desks/:deskId/cards/:cardId/tasks', component: Tasks, props: true}
+    {path: '/desks/:deskId/cards/:cardId/tasks', component: Tasks, props: true},
+    {path: '/login', component: Login},
 ]
 
 const router = createRouter({

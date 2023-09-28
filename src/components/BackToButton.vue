@@ -15,9 +15,9 @@ export default {
   methods: {
     backButtonClick() {
       if(this.isToDesk)
-        this.$router.push(`/users/1/desks/`)
+        this.$router.push(`/desks/`)
       else
-        this.$router.push(`/users/1/desks/${this.id}/cards`)
+        this.$router.push(`/desks/${this.id}/cards`)
     }
   },
   computed: {

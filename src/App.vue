@@ -1,15 +1,7 @@
 <template>
   <div id="app">
-    <header>
-      <router-link to="/" id="trello" class="headerElem">Trello</router-link>
-      <div id="deskname" class="headerElem">
-        Список досок
-      </div>
-      <router-link to="/users/1/desks" id="nickname" class="headerElem">
-        {{ userName }}
-      </router-link>
-    </header>
-      <router-view/>
+    <Header v-on:header-changed="changeHeader" :is-logged-in="isLoggedIn" :username="username"/>
+      <router-view v-on:header-changed="changeHeader"/>
     <footer>
       <a href="#">О нас</a>
       <a href="#">Новости</a>
@@ -19,27 +11,30 @@
 </template>
 
 <script>
+import Header from "@/components/Header.vue"
 export default {
   name: 'App',
   components: {
-
+    Header
   },
   data() {
     return {
-      userName: 'user',
+      isLoggedIn: !!localStorage.token,
+      username: localStorage.username,
     }
   },
-  methods: {
+  computed: {
 
+  },
+  methods: {
+    changeHeader(){
+      console.log('change header')
+      this.isLoggedIn = !this.isLoggedIn
+      this.username = this.isLoggedIn ? localStorage.username : ''
+    }
   }
 }
 </script>
-
-<style scoped>
-  footer {
-
-  }
-</style>
 
 <style>
 #app {
@@ -57,36 +52,6 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-.headerElem {
-  color: white;
-  border-radius: 10px;
-  padding: 10px 15px;
-  text-decoration: none;
-  font-size: 17px;
-}
-#trello {
-  background-color: #503335;
-  color: #C0ECE9;
-  font-weight: bold;
-  margin-left: 10px;
-}
-#trello:hover {
-  background-color: #312022;
-}
-#deskname {
-  color: black;
-  font-weight: bold;
-  background-color: #E0EAEB;
-}
-#nickname {
-  background-color: #86920F;
-}
-#nickname:hover {
-  background-color: #B2BC4E;
-}
-#nickname, #deskname {
-  margin: 5px 20px;
 }
 main {
   flex-grow: 1;
