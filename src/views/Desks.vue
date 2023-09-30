@@ -1,10 +1,15 @@
 <template>
   <main>
     <div v-if="isFetched">
-      <DeskOrCardList v-on:change-elem="changeElem" v-on:click-on-elem="clickOnDesk" v-on:delete-elem="deleteComponent" :elems="desks" :add-button-text="addButtonText"/>
-      <AddComponent v-on:component-added="postComponent" :add-button-text="addButtonText"/>
+      <div class="desksHeader">
+        <button v-on:click="showAddComponent" class="addButton">
+          {{ addButtonText }}
+        </button>
+      </div>
+      <AddComponent :is-adding="componentAdding" v-on:component-added="postComponent" :is-desk="true"/>
+      <DeskOrCardList :is-fetched="isFetched" v-on:change-elem="changeElem" v-on:click-on-elem="clickOnDesk" v-on:delete-elem="deleteComponent" :elems="desks" :add-button-text="addButtonText"/>
     </div>
-    <h1 v-else>Доступ к несущестующей информации</h1>
+    <h1 v-else-if="isError">{{ errorText }}</h1>
   </main>
 </template>
 
@@ -16,10 +21,17 @@
     data() {
       return {
         desks: [],
-        addButtonText: 'Добавить доску',
         isFetched: false,
+        isError: false,
+        errorText: '',
+        componentAdding: false,
         authHeader: 'Bearer '
       }
+    },
+    computed: {
+      addButtonText() {
+        return this.componentAdding ? 'Закрыть' : '+ Добавить еще одну доску '
+      },
     },
     created() {
       console.log('in mounted desks')
@@ -32,18 +44,25 @@
           }
         })
             .then(response => {
-              if (response.ok) {
+              console.log(response.status)
+              if(response.ok) {
                 this.isFetched = true
                 return response.json()
               }
-              else if(response.status === 401)
+              else if(response.status === 403){
+                this.errorText = 'Данные недоступны'
+                this.isError = true
+              }
+              else if(response.status === 401) {
                 this.$router.push('/login')
+              }
             })
             .then(res => {
               if(this.isFetched)
                 this.desks = res
             })
             .catch(error => {
+              this.isError = true
               console.log(error)
             })
       }
@@ -53,23 +72,30 @@
       }
     },
     methods: {
-      postComponent(comp) {
+      showAddComponent() {
+        this.componentAdding = !this.componentAdding
+      },
+      postComponent(desk) {
         console.log('in postComponent')
-        fetch(`http://localhost:8081/users/${localStorage.username}/newDesk`,
+        fetch(`http://localhost:8081/users/newDesk`,
             {
               method: 'POST',
               headers: {
                 'Content-type': 'application/json;charset=utf-8',
                 Authorization: this.authHeader,
               },
-              body: JSON.stringify(comp)
+              body: JSON.stringify(desk)
             })
-            .then(response => { if(response.ok)  return response.json() })
-            .then(res => {
-              console.log(res)
-              comp.id = res
-              this.desks.push(comp)
+            .then(response => {
+              if(response.ok) {
+                let jsonPromise = response.json()
+                jsonPromise.then(json => {
+                  desk.id = json
+                  this.desks.push(desk)
+                })
+              }
             })
+        this.showAddComponent()
       },
       deleteComponent(index) {
         console.log('in deleteComponent ' + this.desks[index])
@@ -86,7 +112,7 @@
       },
       changeElem(changedElem, index) {
         console.log('in desks ' + index + ' ' + changedElem.id + ' ' + changedElem.name + ' ' + changedElem.descr)
-        fetch(`http://localhost:8081/users/${localStorage.username}/desks/update`,
+        fetch(`http://localhost:8081/users/desks/update`,
             {
               method: 'POST',
               headers: {
@@ -101,6 +127,19 @@
   }
 </script>
 
-<style>
-
+<style scoped>
+.desksHeader {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.addButton {
+  width: 15%;
+  padding: 10px 5px;
+}
+.addButton:hover {
+  background: #BACECF;
+}
 </style>

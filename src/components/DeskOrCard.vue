@@ -83,7 +83,7 @@ button {
   text-align: center;
   background: white;
   padding: 6px;
-
+  font-family: sans-serif;
 }
 .smallTitle {
   font-size: 13px;

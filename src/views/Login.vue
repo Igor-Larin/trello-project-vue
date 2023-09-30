@@ -4,8 +4,8 @@
       <h3>
         Вход
       </h3>
-      <input v-model="userName" class="regForm" placeholder="Имя пользователя">
-      <input v-model="userPassword" class="regForm" placeholder="Пароль">
+      <input v-on:keyup.enter="loginButtonClick" v-model="userName" class="regForm" placeholder="Имя пользователя">
+      <input v-on:keyup.enter="loginButtonClick" type="password" v-model="userPassword" class="regForm" placeholder="Пароль">
       <button v-on:click="loginButtonClick" class="regForm gray" id="regButton" type="submit">
         Войти
       </button>
@@ -35,8 +35,10 @@
       }
     },
     mounted() {
-      if(localStorage.username)
-        this.$router.push('/desks')
+      if(localStorage.token)
+        this.$emit('header-changed')
+      localStorage.removeItem('token')
+      localStorage.removeItem('username')
     },
     methods: {
       loginButtonClick() {
@@ -63,7 +65,8 @@
                     this.$emit('header-changed')
                     this.$router.push('/desks')
                   })
-                } else {
+                }
+                else {
                   this.errorText = 'Пользователь не найден'
                   this.isError = true
                 }

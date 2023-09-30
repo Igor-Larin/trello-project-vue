@@ -4,8 +4,8 @@
       <h3>
         Регистрация нового пользователя
       </h3>
-      <input v-model="userName" class="regForm" placeholder="Имя пользователя">
-      <input v-model="userPassword" class="regForm" placeholder="Пароль">
+      <input v-on:keyup.enter="regButtonClick" v-model="userName" class="regForm" placeholder="Имя пользователя">
+      <input v-on:keyup.enter="regButtonClick" type="password" v-model="userPassword" class="regForm" placeholder="Пароль">
       <button v-on:click="regButtonClick" class = "regForm gray" id="regButton" type="submit">
         Зарегистрироваться
       </button>

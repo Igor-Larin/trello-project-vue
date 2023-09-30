@@ -57,6 +57,7 @@ main {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(to bottom, #a4fffa, #ffffff);
 }
 button, a {
   text-align: center;
@@ -84,6 +85,9 @@ footer a {
 }
 footer a:hover {
   text-decoration: underline;
+}
+h1 {
+  text-align: center;
 }
 .deleteButton {
   background: rosybrown;

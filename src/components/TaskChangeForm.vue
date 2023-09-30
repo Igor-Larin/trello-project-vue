@@ -50,16 +50,18 @@ export default {
  }
  input {
    width: 95%;
-   margin: 2px;
-   padding: 2px;
+   margin: 5px;
+   padding: 8px;
+   text-align: center;
    border-radius: 5px;
    border-width: 1px;
  }
  .formElem:hover {
    cursor: default;
  }
- .formElem > input {
-   margin-top: 5px;
+ .saveButton {
+   margin: 5px 0 5px;
+   padding: 8px;
  }
  .saveButton:hover {
    background: #BACECF;

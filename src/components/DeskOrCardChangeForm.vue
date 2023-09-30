@@ -1,14 +1,9 @@
 <template>
   <div class="card">
-    <h3>Изменение параметров</h3>
-    <div class="formElem">
-      <label>Название</label>
-      <input v-model="nameInput">
-    </div>
-    <div class="formElem">
-      <label>Описание</label>
-      <input v-model="descrInput">
-    </div>
+    <p class="smallTitle">Название</p>
+    <input class="text" v-model="nameInput">
+    <p class="smallTitle">Описание</p>
+    <input class="text" v-model="descrInput">
     <button class="saveButton" v-on:click="saveButtonClick">Сохранить</button>
   </div>
 </template>
@@ -29,6 +24,7 @@ export default {
         id: this.elem.id,
         name: this.nameInput,
         descr: this.descrInput,
+        //users: this.elem.users,
       }
       this.$emit('save-button-clicked', changedElem)
     }
@@ -37,25 +33,28 @@ export default {
 </script>
 
 <style scoped>
- .formElem {
-   display: flex;
-   flex-direction: column;
-   justify-content: space-evenly;
-   align-items: center;
-   margin: 5px;
-   padding: 10px;
-   border: 1px solid lightgray;
-   border-radius: 5px;
-   background: white;
- }
- .formElem:hover {
-   cursor: default;
- }
- .formElem > input {
-   margin-top: 5px;
- }
+input {
+  width: 85%;
+  padding: 3px;
+  text-align: center;
+}
  .saveButton:hover {
    background: #BACECF;
  }
-
+.text {
+  margin: 2px auto 12px;
+  font-size: 18px;
+  border: 1px orange solid;
+  border-radius: 5px;
+  width: 80%;
+  text-align: center;
+  background: white;
+  padding: 6px;
+  font-family: sans-serif;
+}
+.smallTitle {
+  font-size: 13px;
+  margin: 2px auto 2px;
+  border: none;
+}
 </style>

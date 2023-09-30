@@ -1,5 +1,7 @@
 <template>
-  <button v-on:click="backButtonClick" class="backButton">{{ buttonText }}</button>
+  <div class="buttonCont">
+    <button v-on:click="backButtonClick" class="backButton">{{ buttonText }}</button>
+  </div>
 </template>
 
 <script >
@@ -29,13 +31,16 @@ export default {
 </script>
 
 <style scoped>
+.buttonCont {
+  display: flex;
+  justify-content: center;
+}
 .backButton {
   padding: 7px;
   margin: 5px auto;
   width: 12%;
 }
 .backButton:hover {
-  cursor: pointer;
   background: #C0ECE9;
 }
 </style>

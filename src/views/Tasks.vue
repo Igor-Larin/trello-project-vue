@@ -1,5 +1,6 @@
 <template>
   <main>
+    <div v-if="isFetched">
       <div class="taskContainer" v-if="tasks.length !== 0">
         <h3>Список задач карточки </h3>
         <TasksFilters v-on:sort-changed="changeSortFlag" v-on:filter-changed="changeFilterFlag" :filter-flag="filterFlag" :sort-flag="sortFlag"/>
@@ -8,6 +9,8 @@
       <h1 v-else>Список задач пуст!</h1>
       <AddTask v-on:add-task="addTask"/>
       <BackToButton :is-to-desk="false" :id="deskId"/>
+    </div>
+    <h1 v-else-if="isError">{{ errorText }}</h1>
   </main>
 </template>
 
@@ -31,6 +34,9 @@ export default defineComponent({
       sortFlag: '',
       filterFlag: '',
       authHeader: 'Bearer ',
+      isFetched: false,
+      isError: false,
+      errorText: '',
     }
   },
   methods: {
@@ -45,7 +51,11 @@ export default defineComponent({
             },
             body: JSON.stringify(task)
           })
-          .then(response => { if (response.ok) return response.json() })
+          .then(response => {
+            if (response.ok) {
+              return response.json()
+            }
+          })
           .then( res => {
             task.id = res
             this.tasks.push(task)
@@ -116,9 +126,23 @@ export default defineComponent({
           Authorization: this.authHeader
         }
       })
-          .then(response => response.json())
+          .then(response => {
+            if(response.ok) {
+              this.isFetched = true
+              return response.json()
+            }
+            else if(response.status === 403){
+              this.errorText = 'Данные недоступны'
+              this.isError = true
+            }
+            else if(response.status === 401) {
+              this.$router.push('/login')
+            }
+          })
           .then(res => this.tasks = res)
           .catch(error => {
+            this.errorText = 'Отсутсвует соединение с сервером'
+            this.isError = true
             console.log(error)
           })
     }
@@ -130,9 +154,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-h1 {
-  text-align: center;
-}
 .taskContainer {
   display: flex;
   flex-direction: column;
@@ -140,9 +161,10 @@ h1 {
   align-items: center;
   padding: 5px;
   margin: 10px auto;
-  background: aliceblue;
+  background: #F5FDFF;
   border-radius: 5px;
   width: 35%;
+  box-shadow: 2px 3px 5px rgba(0,0,0,0.5);
 }
 
 </style>

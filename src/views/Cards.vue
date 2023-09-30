@@ -1,8 +1,16 @@
 <template>
   <main>
-    <DeskOrCardList v-on:change-elem="changeElem" v-on:click-on-elem="click" v-on:delete-elem="deleteComponent" :elems="cards" :add-button-text="addButtonText"/>
-    <AddComponent v-on:component-added="postComponent" :add-button-text="addButtonText"/>
-    <BackToButton :is-to-desk="true"/>
+    <div v-if="isFetched">
+      <div class="desksHeader">
+        <button v-on:click="showAddComponent" class="addButton">
+          {{ addButtonText }}
+        </button>
+      </div>
+      <AddComponent :is-adding="componentAdding" v-on:component-added="postComponent" :is-desk="false"/>
+      <DeskOrCardList :is-fetched="isFetched" v-on:change-elem="changeElem" v-on:click-on-elem="click" v-on:delete-elem="deleteComponent" :elems="cards" :add-button-text="addButtonText"/>
+      <BackToButton :is-to-desk="true"/>
+    </div>
+    <h1 v-else-if="isError">{{ errorText }}</h1>
   </main>
 </template>
 
@@ -22,11 +30,22 @@
     data() {
       return {
         cards: [],
-        addButtonText: 'Добавить карточку',
         authHeader: 'Bearer ',
+        isFetched: false,
+        isError: false,
+        errorText: '',
+        componentAdding: false,
       }
     },
+    computed: {
+      addButtonText() {
+        return this.componentAdding ? 'Закрыть' : '+ Добавить еще одну карточку '
+      },
+    },
     methods: {
+      showAddComponent() {
+        this.componentAdding = !this.componentAdding
+      },
       postComponent(card) {
         console.log('in postComponent')
         fetch(`http://localhost:8081/desks/${this.deskId}/newCard`,
@@ -36,13 +55,16 @@
                 'Content-type':'application/json;charset=utf-8',
                 Authorization: this.authHeader
               },
-              body: JSON.stringify(card)
+              body: JSON.stringify(card, (key, value) => {return (key === 'users') ? undefined : value})
             })
-            .then(response => { if (response.ok) return response.json() })
+            .then(response => {
+              if (response.ok) return response.json()
+            })
             .then(res => {
               card.id = res
               this.cards.push(card)
             })
+        this.showAddComponent()
       },
       deleteComponent(index) {
         console.log('in deleteComponent ')
@@ -80,8 +102,21 @@
             Authorization: this.authHeader
           }
         })
-            .then(response => response.json())
-            .then(res => this.cards = res)
+            .then(response => {
+              if(response.ok) {
+                this.isFetched = true
+                return response.json()
+              }
+              else if(response.status === 403){
+                this.errorText = 'Данные недоступны'
+                this.isError = true
+              }
+              else if(response.status === 401) {
+                this.$router.push('/login')
+              }
+            }
+            )
+            .then(json => this.cards = json)
             .catch(error => {
               console.log(error)
             })
@@ -94,5 +129,16 @@
 </script>
 
 <style scoped>
-
+.desksHeader {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.addButton {
+  width: 15%;
+  padding: 10px 5px;
+}
+.addButton:hover {
+  background: #BACECF;
+}
 </style>
