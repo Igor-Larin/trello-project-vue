@@ -1,37 +1,24 @@
 <template>
   <div class="addCardContainer">
     <div class="deskInfoCont">
-        <input v-if="isAdding" class="addInput" v-model="nameInputText" type="text" :placeholder="name">
-        <input v-if="isAdding" class="addInput" v-model="descrInputText" type="text" :placeholder="descr">
+        <input class="addInput" v-model="nameInputText" type="text" :placeholder="name">
+        <input class="addInput" v-model="descrInputText" type="text" :placeholder="descr">
     </div>
-    <div v-if="isAdding && isDesk" class="usersContainer">
-      <h4>Участники</h4>
-      <div v-for="(user, index) in users" class="userInputCont">
-        <div class="userNameDiv">
-          {{ user }}
-        </div>
-        <button class="userButton" v-on:click="removeUser(index)">-</button>
-      </div>
-      <div class="userInputCont">
-        <input class="userInput" v-model="userNameInput" placeholder="Имя участника">
-        <button class="userButton" v-on:click="addUser">+</button>
-      </div>
-    </div>
-      <button v-if="isAdding" v-on:click="addComponentHandler" class="addCardButton">
-        {{ addButtonText }}
-      </button>
-      <div v-if="isError" class="alertBlock">
-        {{ errorText }}
-      </div>
+    <AddUsersForm v-if="isDesk" v-on:user-removed="removeUser" v-on:user-added="addUser" :users="users"/>
+    <button v-on:click="addComponentHandler" class="addCardButton">
+      {{ addButtonText }}
+    </button>
   </div>
-  <hr v-if="isAdding">
+  <hr>
 </template>
 
 <script>
+  import AddUsersForm from "@/components/AddUsersForm.vue";
+
   export default {
+    components: {AddUsersForm},
     props: {
       isDesk: Boolean,
-      isAdding: Boolean,
     },
     data() {
       return {
@@ -40,7 +27,7 @@
         descrInputText: '',
         userNameInput: '',
         errorText: '',
-        addButtonText: this.isDesk ? 'Добавить доску' : 'Добавить карточку',
+        addButtonText: this.isDesk ? 'Добавить доску' : 'Добавить колонку',
         users: [],
       }
     },
@@ -49,13 +36,13 @@
         if (this.isDesk)
           return 'Имя доски'
         else
-          return 'Имя карточки'
+          return 'Имя колонки'
       },
       descr() {
         if (this.isDesk)
           return 'Описание доски'
         else
-          return 'Описание карточки'
+          return 'Описание колонки'
       }
     },
     methods: {
@@ -64,9 +51,26 @@
       },
       addUser() {
         if(this.userNameInput.trim() !== '') {
-          let user = this.userNameInput
-          this.users.push(user)
-          this.userNameInput = ''
+          fetch(`http://localhost:8081/users/check/${this.userNameInput.trim()}`, {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.token
+            }
+          })
+              .then(response => {
+                if(response.ok) {
+                  let user = this.userNameInput.trim()
+                  this.users.push(user)
+                  this.userNameInput = ''
+                }
+                else if(response.status === 404){
+                  this.errorText = 'Пользователь с таким именем не найден'
+                  this.isError = true
+                }
+              })
+        }
+        else {
+          this.errorText = 'Поле ввода не должно быть пустым'
+          this.isError = true
         }
       },
       addComponentHandler() {
@@ -111,57 +115,9 @@
   max-height: 100px;
   font-size: 13px;
 }
-.alert-enter-active{
-  transition: opacity 0.75s linear;
-}
-.alert-leave-active {
-  transition: opacity 2.5s ease-in
-}
-
-.alert-enter-from,
-.alert-leave-to{
-  opacity: 0;
-}
-h4 {
-  margin: 2px 0 4px;
-}
-.alertBlock {
-  background: #979797;
-  color: white;
-  padding: 7px;
-  text-align: center;
-  border-radius: 6px;
-  margin-top: 5px;
-}
-.userNameDiv {
-  background: white;
-  width: 85%;
-  padding: 6px;
-  box-sizing: border-box;
-  border: rgb(133, 133, 133) solid 1px;
-  text-align: center;
-}
 .deskInfoCont {
   display: flex;
   flex-direction: column;
-  width: 15%;
-}
-.usersContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 15%;
-}
-.userInputCont {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 5px;
-}
-.userInput {
-  width: 85%;
-}
-.userButton {
   width: 15%;
 }
 input {

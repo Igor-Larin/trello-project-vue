@@ -6,7 +6,7 @@
           {{ addButtonText }}
         </button>
       </div>
-      <AddComponent :is-adding="componentAdding" v-on:component-added="postComponent" :is-desk="true"/>
+      <AddDeskOrCard v-if="componentAdding" v-on:component-added="postComponent" :is-desk="true"/>
       <DeskOrCardList :is-fetched="isFetched" v-on:change-elem="changeElem" v-on:click-on-elem="clickOnDesk" v-on:delete-elem="deleteComponent" :elems="desks" :add-button-text="addButtonText"/>
     </div>
     <h1 v-else-if="isError">{{ errorText }}</h1>
@@ -15,9 +15,9 @@
 
 <script>
   import DeskOrCardList from "@/components/DeskOrCardList.vue";
-  import AddComponent from "@/components/AddDeskOrCard.vue";
+  import AddDeskOrCard from "@/components/AddDeskOrCard.vue";
   export default {
-    components: {AddComponent, DeskOrCardList},
+    components: {AddDeskOrCard, DeskOrCardList},
     data() {
       return {
         desks: [],

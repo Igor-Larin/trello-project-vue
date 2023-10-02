@@ -81,25 +81,6 @@ main {
   margin: 0 auto;
   background: linear-gradient(to bottom, #a4fffa, #ffffff);
 }
-.alert-enter-active{
-  transition: opacity 0.75s linear;
-}
-.alert-leave-active {
-  transition: opacity 2.5s ease-in
-}
-
-.alert-enter-from,
-.alert-leave-to{
-  opacity: 0;
-}
-.alertBlock {
-  background: #979797;
-  color: white;
-  padding: 7px;
-  text-align: center;
-  border-radius: 6px;
-  margin-top: 30px;
-}
 .gray {
   background-color: #979797;
 }

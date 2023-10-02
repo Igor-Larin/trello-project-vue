@@ -1,11 +1,11 @@
 <template>
   <div class="optionsContainer">
-    <select v-on:change="filterChange" v-model="filterFlag">
+<!--    <select v-on:change="filterChange" v-model="filterFlag">
       <option selected disabled hidden="hidden" value="none">Фильтр</option>
       <option v-for="option in filterOptions" :value="option.value">
         {{ option.text }}
       </option>
-    </select>
+    </select>-->
     <select v-on:change="sortChange" v-model="sortFlag">
       <option selected disabled hidden="hidden" value="none">Сортировка</option>
       <option v-for="option in sortOptions" :value="option.value">

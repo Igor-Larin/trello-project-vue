@@ -1,10 +1,10 @@
 <template>
   <div class="card">
     <p class="smallTitle">Название</p>
-    <input class="text" v-model="nameInput">
+    <input v-on:keyup.enter="saveButtonClick" class="text" v-model="nameInput">
     <p class="smallTitle">Описание</p>
-    <input class="text" v-model="descrInput">
-    <button class="saveButton" v-on:click="saveButtonClick">Сохранить</button>
+    <input v-on:keyup.enter="saveButtonClick" class="text" v-model="descrInput">
+    <button class="saveButton" v-on:click="saveButtonClick">&#10004;</button>
   </div>
 </template>
 

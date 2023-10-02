@@ -24,7 +24,7 @@ export default {
   },
   computed: {
     buttonText() {
-      return this.isToDesk ? 'Назад к доскам' : 'Назад к карточкам'
+      return this.isToDesk ? 'Назад к доскам' : 'Назад к колонкам'
     }
   }
 }

@@ -11,10 +11,10 @@
     </p>
     <div class="controlButtons">
       <button @:click.stop="changeButtonClick" class="changeButton">
-        Изменить
+        &#9998;
       </button>
       <button @:click.stop="deleteButtonClick" class="deleteButton">
-        Удалить
+        &#10006;
       </button>
     </div>
   </div>
@@ -58,7 +58,7 @@ export default {
   background-color: #F5FDFF;
   border-radius: 6px;
   padding: 0 10px 10px;
-  margin: 20px 20px;
+  margin: 10px 20px;
   box-shadow: 2px 3px 5px rgba(0,0,0,0.5);
   width: 15%;
   max-width: 20%;
@@ -68,11 +68,12 @@ export default {
 }
 .controlButtons {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-end;
   width: 100%;
 }
 button {
-  padding: 5px;
+  padding: 5px 10px;
+  margin-left: 5px;
 }
 .text {
   margin: 2px auto 12px;

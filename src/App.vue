@@ -59,6 +59,24 @@ main {
   flex-direction: column;
   background: linear-gradient(to bottom, #a4fffa, #ffffff);
 }
+.alertBlock {
+  background: #979797;
+  color: white;
+  padding: 7px;
+  text-align: center;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+.alert-enter-active{
+  transition: opacity 0.75s linear;
+}
+.alert-leave-active {
+  transition: opacity 2.5s ease-in
+}
+.alert-enter-from,
+.alert-leave-to{
+  opacity: 0;
+}
 button, a {
   text-align: center;
   background-color: #E0EAEB;
@@ -69,6 +87,7 @@ button, a {
 }
 button:hover {
   cursor: pointer;
+  background: #BACECF;
 }
 footer {
   background-color: #B2BC4E;

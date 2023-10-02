@@ -2,9 +2,10 @@
   <main>
     <div v-if="isFetched">
       <div class="taskContainer" v-if="tasks.length !== 0">
-        <h3>Список задач карточки </h3>
-        <TasksFilters v-on:sort-changed="changeSortFlag" v-on:filter-changed="changeFilterFlag" :filter-flag="filterFlag" :sort-flag="sortFlag"/>
-        <Task v-on:task-complete="changeTaskComplete" v-on:save-changed-task="saveTask" v-on:delete-task="deleteTask" v-for="(task, index) in getTasks" :task="task" :index="index"/>
+        <h3>Список задач колонки </h3>
+        <TasksFilters v-if="tasks.length > 1" v-on:sort-changed="changeSortFlag" v-on:filter-changed="changeFilterFlag" :filter-flag="filterFlag" :sort-flag="sortFlag"/>
+        <Task v-on:task-complete="changeTaskComplete" v-on:save-changed-task="saveTask" v-on:delete-task="deleteTask"
+              v-on:task-removed="removeTask" v-for="(task, index) in getTasks" :task="task" :index="index" :cards="cards"/>
       </div>
       <h1 v-else>Список задач пуст!</h1>
       <AddTask v-on:add-task="addTask"/>
@@ -15,7 +16,6 @@
 </template>
 
 <script>
-
 import {defineComponent} from "vue";
 import AddTask from "@/components/AddTask.vue";
 import BackToButton from "@/components/BackToButton.vue";
@@ -31,6 +31,7 @@ export default defineComponent({
   data() {
     return {
       tasks: [],
+      cards: [],
       sortFlag: '',
       filterFlag: '',
       authHeader: 'Bearer ',
@@ -69,6 +70,9 @@ export default defineComponent({
         }
       })
           .then(response => { if (response.ok) this.tasks.splice(index, 1)})
+    },
+    removeTask(index) {
+      this.tasks.splice(index, 1)
     },
     saveTask(changedTask, index) {
       fetch(`http://localhost:8081/cards/${this.cardId}/tasks/update`,
@@ -139,7 +143,10 @@ export default defineComponent({
               this.$router.push('/login')
             }
           })
-          .then(res => this.tasks = res)
+          .then(res => {
+            this.tasks = res.tasks
+            this.cards = res.cards
+          })
           .catch(error => {
             this.errorText = 'Отсутсвует соединение с сервером'
             this.isError = true
@@ -166,5 +173,4 @@ export default defineComponent({
   width: 35%;
   box-shadow: 2px 3px 5px rgba(0,0,0,0.5);
 }
-
 </style>

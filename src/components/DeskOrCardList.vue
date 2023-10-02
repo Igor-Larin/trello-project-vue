@@ -1,7 +1,7 @@
 <template>
   <div v-if="isFetched">
     <div v-if="elems.length !== 0" class="cardsContainer">
-      <DeskOrCard v-for="(elem, index) in elems" :key="elem.id" :elem="elem" :index="index" v-on:change-button-clicked="changeElem" v-on:click-on-elem="clickOnElem" v-on:delete-elem="deleteElem"/>
+      <DeskOrCard v-for="(elem, index) in sortedElems" :key="elem.id" :elem="elem" :index="index" v-on:change-button-clicked="changeElem" v-on:click-on-elem="clickOnElem" v-on:delete-elem="deleteElem"/>
     </div>
     <h1 v-else>Элементов пока нет!</h1>
   </div>
@@ -32,7 +32,12 @@ export default {
       console.log('ind desklist change')
       this.$emit('change-elem', changedElem, index)
     }
-  }
+  },
+  computed: {
+    sortedElems() {
+      return this.elems.sort((a, b) => a.id - b.id)
+    }
+  },
 }
 </script>
 

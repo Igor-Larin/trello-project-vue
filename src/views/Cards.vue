@@ -6,7 +6,7 @@
           {{ addButtonText }}
         </button>
       </div>
-      <AddComponent :is-adding="componentAdding" v-on:component-added="postComponent" :is-desk="false"/>
+      <AddComponent v-if="componentAdding" v-on:component-added="postComponent" :is-desk="false"/>
       <DeskOrCardList :is-fetched="isFetched" v-on:change-elem="changeElem" v-on:click-on-elem="click" v-on:delete-elem="deleteComponent" :elems="cards" :add-button-text="addButtonText"/>
       <BackToButton :is-to-desk="true"/>
     </div>
@@ -39,7 +39,7 @@
     },
     computed: {
       addButtonText() {
-        return this.componentAdding ? 'Закрыть' : '+ Добавить еще одну карточку '
+        return this.componentAdding ? 'Закрыть' : '+ Добавить еще одну колонку '
       },
     },
     methods: {
@@ -81,7 +81,7 @@
       },
       changeElem(changedElem, index) {
         console.log('in cards ' + index + ' ' + changedElem.id + ' ' + changedElem.name + ' ' + changedElem.descr)
-        fetch(`http://localhost:8081/desks/${this.deskId}/cards/update`,
+        fetch(`http://localhost:8081/cards/update`,
             {
               method: 'POST',
               headers: {
@@ -90,7 +90,7 @@
               },
               body: JSON.stringify(changedElem)
             })
-            .then(response => { if (response.ok) this.cards[index] = changedElem })
+            .then(response => this.cards[index] = changedElem)
       }
     },
     created() {
@@ -104,7 +104,6 @@
         })
             .then(response => {
               if(response.ok) {
-                this.isFetched = true
                 return response.json()
               }
               else if(response.status === 403){
@@ -116,9 +115,13 @@
               }
             }
             )
-            .then(json => this.cards = json)
+            .then(json => {
+              this.cards = json
+              this.isFetched = true
+            })
             .catch(error => {
-              console.log(error)
+              this.isError = true
+              this.isError = 'Отсутствует соединение с сервером'
             })
       }
       else {
