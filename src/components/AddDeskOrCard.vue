@@ -25,7 +25,6 @@
         isError: false,
         nameInputText: '',
         descrInputText: '',
-        userNameInput: '',
         errorText: '',
         addButtonText: this.isDesk ? 'Добавить доску' : 'Добавить колонку',
         users: [],
@@ -49,29 +48,8 @@
       removeUser(index) {
         this.users.splice(index, 1)
       },
-      addUser() {
-        if(this.userNameInput.trim() !== '') {
-          fetch(`http://localhost:8081/users/check/${this.userNameInput.trim()}`, {
-            headers: {
-              Authorization: 'Bearer ' + localStorage.token
-            }
-          })
-              .then(response => {
-                if(response.ok) {
-                  let user = this.userNameInput.trim()
-                  this.users.push(user)
-                  this.userNameInput = ''
-                }
-                else if(response.status === 404){
-                  this.errorText = 'Пользователь с таким именем не найден'
-                  this.isError = true
-                }
-              })
-        }
-        else {
-          this.errorText = 'Поле ввода не должно быть пустым'
-          this.isError = true
-        }
+      addUser(username) {
+        this.users.push(username)
       },
       addComponentHandler() {
         console.log('generate event')

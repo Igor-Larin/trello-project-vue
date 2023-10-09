@@ -109,6 +109,7 @@
   border-radius: 10px;
   text-align: center;
   background: white;
+  z-index: 2;
 }
 .cardList {
   display: flex;

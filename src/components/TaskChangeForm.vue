@@ -15,14 +15,16 @@ export default {
   },
   methods: {
     saveButtonClick() {
-      let changedElem = {
-        id: this.elem.id,
-        text: this.textInput,
-        complete: this.elem.complete,
-        timestamp: this.elem.timestamp,
+      if(this.textInput.trim() !== '') {
+        let changedElem = {
+          id: this.elem.id,
+          text: this.textInput,
+          complete: this.elem.complete,
+          timestamp: this.elem.timestamp,
+        }
+        console.log(changedElem)
+        this.$emit('save-button-clicked', changedElem)
       }
-      console.log(changedElem)
-      this.$emit('save-button-clicked', changedElem)
     }
   },
   computed: {
