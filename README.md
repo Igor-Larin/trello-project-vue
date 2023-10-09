@@ -8,6 +8,7 @@
 Клиентская часть реализована как одностраничное приложение с помощью Vue.js.
 
 ## Реализованные возможности
+- Регистрация и авторизация пользователей
 - Просмотр  
   ![](https://media.giphy.com/media/I9LZrwn4i6Kra9lrbQ/giphy.gif)
 - Добавление  
@@ -16,8 +17,7 @@
 ![](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW9sdGd3MHVqdmpnc3BrYndla2pvZ2ZoampqMjc3dWtpNzVjbzN1ciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/itX9alFcTsApUOYNbg/giphy.gif)
 - Сортировка и фильтрация задач  
   ![](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdDMxY3ZqYnZ2YWpiMDZscHFyMGFsNDB3emt6OHQ0ejM2b2I4bTAwNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rJN2NDaqw4ETTFmcmi/giphy.gif)
+- Перемещение задач в другие колонки
 
 ## Что нужно сделать
-1. Регистрация, вход, личный кабинет;
-2. Добавить возможность добавлять теги к доскам/карточкам;
-3. Добавить колонки для задач.
+1. Добавить возможность добавлять теги к доскам/колонкам;
